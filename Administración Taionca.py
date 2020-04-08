@@ -1,14 +1,11 @@
 import tkinter
-import ctypes
 from Inventario import inventario
 window = tkinter.Tk()
 
-user32 = ctypes.windll.user32
-user32.SetProcessDPIAware()
-width = user32.GetSystemMetrics(0)
-height = user32.GetSystemMetrics(1)
-width =int(((width-450)/2))
-height =int(((height-150)/2)-(height/10))
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+width =int(((screen_width-450)/2))
+height =int(((screen_height-150)/2)-(screen_height/10))
 window.geometry(f'450x150+{width}+{height}')
 def main():
     window.title("Administración Taionca")

@@ -1,19 +1,17 @@
 #-----------------------------------Inicio------------------------------------#
 import tkinter
 import os
-import ctypes
 from datetime import date
 import time
-from tkinter import ttk 
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import pandas as pd
 #-----------------------------------Tamaño-------------------------------------#
-user32 = ctypes.windll.user32
-user32.SetProcessDPIAware()
-width = user32.GetSystemMetrics(0)
-height = user32.GetSystemMetrics(1)
-width =int(((width-450)/2))
-height =int(((height-150)/2)-(height/10))
+root = tkinter.Tk()
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+width =int(((screen_width-450)/2))
+height =int(((screen_height-150)/2)-(screen_height/10))
+root.destroy()
 
 #--------------------------------------CodeCannotBeRepeated---------------------------------------#
 def codevalidation(code):
