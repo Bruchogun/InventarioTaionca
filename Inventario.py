@@ -1,19 +1,17 @@
 #-----------------------------------Inicio------------------------------------#
 import tkinter
 import os
-import ctypes
 from datetime import date
 import time
-from tkinter import ttk 
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import pandas as pd
 #-----------------------------------Tamaño-------------------------------------#
-user32 = ctypes.windll.user32
-user32.SetProcessDPIAware()
-width = user32.GetSystemMetrics(0)
-height = user32.GetSystemMetrics(1)
-width =int(((width-450)/2))
-height =int(((height-150)/2)-(height/10))
+root = tkinter.Tk()
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+x =int(((screen_width-450)/2))
+y =int(((screen_height-150)/2)-(screen_height/10))
+root.destroy()
 
 #--------------------------------------CodeCannotBeRepeated---------------------------------------#
 def codevalidation(code):
@@ -86,8 +84,8 @@ def send_button(password,add_item_button,delete_item_button,edit_item_button,vie
         messagebox.showwarning('Error', 'Contraseña incorrecta')
 
 def verification(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW):
-    ancho=width+50
-    alto=height+100
+    ancho=x+50
+    alto=y+100
     passwordW = tkinter.Tk()
     passwordW.title('Contraseña')
     passwordW.geometry(f'400x80+{ancho}+{alto}')
@@ -189,7 +187,7 @@ def sotckView(inventarioW,add_item_button,delete_item_button,edit_item_button,vi
 def inventario():
     inventarioW = tkinter.Tk()
     inventarioW.title('Inventario')
-    inventarioW.geometry(f'500x300+{width}+{height}')
+    inventarioW.geometry(f'500x300+{x}+{y}')
 
     add_item_button=tkinter.Button(inventarioW, text='Añadir Artículo', font='Helvetica 10', command = lambda: verification(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW))
     add_item_button.place(relx=0.25,rely=0.25,relwidth=0.25, relheight=0.25)
