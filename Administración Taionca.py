@@ -4,9 +4,9 @@ window = tkinter.Tk()
 
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
-width =int(((screen_width-450)/2))
-height =int(((screen_height-150)/2)-(screen_height/10))
-window.geometry(f'450x150+{width}+{height}')
+x =int(((screen_width-450)/2))
+y =int(((screen_height-150)/2)-(screen_height/10))
+window.geometry(f'450x150+{x}+{y}')
 def main():
     window.title("Administración Taionca")
 
