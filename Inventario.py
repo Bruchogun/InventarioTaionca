@@ -17,8 +17,8 @@ height =int(((height-150)/2)-(height/10))
 
 #--------------------------------------CodeCannotBeRepeated---------------------------------------#
 def codevalidation(code):
-    dataBase=pd.read_csv('Base de datos.exe',header=0)
-    lista=dataBase['Código']
+    dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
+    lista=dataBase_stock['Código']
     if code==lista:
         answer=-1
     return(answer)
@@ -33,31 +33,31 @@ def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,
     measure=actual_selection.get()
     today=str(date.today())
 
-    #----------------------------------Information Verifier/DataBase Saver-----------------------------------#
+    #----------------------------------Information Verifier/DataBase_stock Saver-----------------------------------#
     
-    dataBase=pd.read_csv('Base de datos.exe',header=0)
+    dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
     send_counter=0
-    lista=dataBase['Codigo']
+    lista=dataBase_stock['Codigo']
     if (code==lista).any():
         send_counter=3
     while sellPriceODT.isdigit() and sellPricePub.isdigit() and priceCost.isdigit() and stock.isdigit() and send_counter<1 and measure !='Ninguna'and sellPriceODT != "" and sellPricePub != "" and priceCost != "" and stock != "" and code != "":
-        dataBase= open('Base de datos.exe','a',encoding="utf-8")
-        dataBase.write(code)
-        dataBase.write(',')
-        dataBase.write(description)
-        dataBase.write(',')
-        dataBase.write(sellPriceODT)
-        dataBase.write(',')
-        dataBase.write(sellPricePub)
-        dataBase.write(',')
-        dataBase.write(priceCost)
-        dataBase.write(',')
-        dataBase.write(stock)
-        dataBase.write(',')
-        dataBase.write(measure)
-        dataBase.write(',')
-        dataBase.write(today)
-        dataBase.write('\n')
+        dataBase_stock= open('Base de datos.exe','a',encoding="utf-8")
+        dataBase_stock.write(code)
+        dataBase_stock.write(',')
+        dataBase_stock.write(description)
+        dataBase_stock.write(',')
+        dataBase_stock.write(sellPriceODT)
+        dataBase_stock.write(',')
+        dataBase_stock.write(sellPricePub)
+        dataBase_stock.write(',')
+        dataBase_stock.write(priceCost)
+        dataBase_stock.write(',')
+        dataBase_stock.write(stock)
+        dataBase_stock.write(',')
+        dataBase_stock.write(measure)
+        dataBase_stock.write(',')
+        dataBase_stock.write(today)
+        dataBase_stock.write('\n')
         add_item_code.delete(0,1000)
         add_item_description.delete(0,1000)
         add_item_SellPriceODT.delete(0,1000)
@@ -66,7 +66,7 @@ def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,
         add_item_Stock.delete(0,1000)
         actual_selection.set('Ninguna')
         send_counter=1
-        dataBase.close()
+        dataBase_stock.close()
     if send_counter == 0 :
         labelError.grid(row=8,column=1)
     elif send_counter == 3:
@@ -84,24 +84,24 @@ def edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_
     measure=actual_selection.get()
     today=str(date.today())
 
-    #----------------------------------Information Verifier/DataBase Saver-----------------------------------#
-    dataBase=pd.read_csv('Base de datos.exe',header=0)
+    #----------------------------------Information Verifier/DataBase_stock Saver-----------------------------------#
+    dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
     send_counter=0
-    lista=dataBase['Codigo']
+    lista=dataBase_stock['Codigo']
     if code in lista.to_list():
         while sellPriceODT.isdigit() and sellPricePub.isdigit() and priceCost.isdigit() and stock.isdigit() and send_counter<1 and measure !='Ninguna'and sellPriceODT != "" and sellPricePub != "" and priceCost != "" and stock != "" and code != "":
             place=0
             for row in range(len(lista)):       
                 if code == lista[row]: 
                     place=row
-            dataBase['Descripcion'][place]=description
-            dataBase['Precio de Venta a ODTs'][place]=sellPriceODT
-            dataBase['Precio de Venta al Publico'][place]=sellPricePub
-            dataBase['Precio de Costo'][place]=priceCost
-            dataBase['Existencias'][place]=stock
-            dataBase['Unidad de Medida'][place]=measure
-            dataBase['Ultima Fecha de Modificacion'][place]=today
-            dataBase.to_csv('Base de datos.exe', index=0)
+            dataBase_stock['Descripcion'][place]=description
+            dataBase_stock['Precio de Venta a ODTs'][place]=sellPriceODT
+            dataBase_stock['Precio de Venta al Publico'][place]=sellPricePub
+            dataBase_stock['Precio de Costo'][place]=priceCost
+            dataBase_stock['Existencias'][place]=stock
+            dataBase_stock['Unidad de Medida'][place]=measure
+            dataBase_stock['Ultima Fecha de Modificacion'][place]=today
+            dataBase_stock.to_csv('Base de datos.exe', index=0)
 
             add_item_code.delete(0,1000)
             add_item_description.delete(0,1000)
@@ -119,10 +119,10 @@ def edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_
         labelError.grid_forget()
     
 def send_button(password,add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,passwordW):
-    dataBase=pd.read_excel('Registro de Contraseñas.xlsx','A')
-    dataBasePassword1=str(dataBase['Contraseña'][0])
-    dataBasePassword2=str(dataBase['Contraseña'][1])
-    if password.get()==dataBasePassword1 or password.get()==dataBasePassword2:
+    dataBase_stock=pd.read_excel('Registro de Contraseñas.xlsx','A')
+    dataBase_stockPassword1=str(dataBase_stock['Contraseña'][0])
+    dataBase_stockPassword2=str(dataBase_stock['Contraseña'][1])
+    if password.get()==dataBase_stockPassword1 or password.get()==dataBase_stockPassword2:
         add_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW)
         passwordW.destroy()
     else:
@@ -215,12 +215,12 @@ def sotckView(inventarioW,add_item_button,delete_item_button,edit_item_button,vi
     table.heading('#7', text='Última Modificación', anchor = 'center' )
     table.column('#7',anchor='center')
 
-    dataBase=pd.read_csv('Base de datos.exe',header=0)
+    dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
     lista=[]
-    parameter=len(dataBase['Codigo'])
+    parameter=len(dataBase_stock['Codigo'])
     for row in range(parameter):
-        for column in dataBase:
-            lista.append(dataBase[column][row])
+        for column in dataBase_stock:
+            lista.append(dataBase_stock[column][row])
         code=lista[0]
         del lista[0]
         table.insert('','end', text=code, values=(lista))
@@ -272,16 +272,65 @@ def edit_item(add_item_button,delete_item_button,edit_item_button,view_item_butt
         else:
             messagebox.showwarning('Error', 'Usted no tiene acceso a esta opción')
 
+def stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry):
+    code=str(consume_code_Entry.get())
+    quantity=int(consume_quantity_Entry.get())
+    odt=str(consume_ODT_Entry.get())
+    today=str(date.today())
+
+    dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
+    permission=0
+    place="NaN"
+    lista=dataBase_stock['Codigo']
+    if code in lista.to_list() and odt != "":
+        permission=permission+1
+    for row in range(len(lista)):      
+        if code == lista[row]: 
+            place=row
+    if  place != "NaN" and dataBase_stock['Existencias'][place]>=quantity:
+        permission=permission+1
+    
+    if permission==2:
+        dataBase_stock['Existencias'][place]=dataBase_stock['Existencias'][place]-quantity
+        dataBase_stock.to_csv('Base de datos.exe', index=0)
+
+        dataBase_movement= open("Operaciones de ODT.exe","a",encoding="UTF-8")
+        dataBase_movement.write(code)
+        dataBase_movement.write(",")
+        dataBase_movement.write(odt)
+        dataBase_movement.write(",")
+        dataBase_movement.write(consume_quantity_Entry.get())
+        dataBase_movement.write(",")
+        dataBase_movement.write("Consumo")
+        dataBase_movement.write(",")
+        dataBase_movement.write(today)
+        dataBase_movement.write("\n")
+        dataBase_movement.close()
+        
+        consume_code_Entry.delete(0,1000)
+        consume_quantity_Entry.delete(0,1000)
+        consume_ODT_Entry.delete(0,1000)
+
+        cost=(dataBase_stock['Precio de Venta a ODTs'][place])*quantity
+        menssage_price=f'Se gastaron {cost}$ con esta acción.'
+        messagebox.showinfo("Gasto realizado",menssage_price)
+    else:
+        messagebox.showwarning('Error', 'Favor revisar: \n  1)El código ingresado no existe. \n  2)La cantidad ingresada es mayor a la existente. \n  3)Hay un espacio en blanco.')
+
 #------------------------------------Consumir Inventario-------------------------------------#
 def stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button):
     cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button)
-    
+    inventarioW.geometry(f'550x150+{width}+{height}')
+
     consume_code=tkinter.Label(inventarioW,text='Código')
     consume_code.grid(row=0,column=0)
     consume_quantity=tkinter.Label(inventarioW,text='Cantidad consumida')
     consume_quantity.grid(row=1,column=0)
+    consume_quantity_advice=tkinter.Label(inventarioW,text='Debe ser un número entero', foreground= "gray")
+    consume_quantity_advice.grid(row=1,column=2)
     consume_ODT=tkinter.Label(inventarioW,text="ODT de consumo")
     consume_ODT.grid(row=2,column=0)
+
     consume_code_Entry=tkinter.Entry(inventarioW)
     consume_code_Entry.grid(row=0,column=1)
     consume_quantity_Entry=tkinter.Entry(inventarioW)
@@ -289,16 +338,19 @@ def stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_butto
     consume_ODT_Entry=tkinter.Entry(inventarioW)
     consume_ODT_Entry.grid(row=2,column=1)
 
+    send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry))
+    send_button.grid(row=3,column=1)
+
 #------------------------------------Función Inventario--------------------------------------#
 def inventario():
     inventarioW = tkinter.Tk()
     inventarioW.title('Inventario')
-    inventarioW.geometry(f'500x300+{width}+{height}')
+    inventarioW.geometry(f'610x250+{width}+{height}')
 
     add_item_button=tkinter.Button(inventarioW, text='Añadir Artículo', font='Helvetica 10', command = lambda: verification(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW))
     add_item_button.place(relx=0.25,rely=0.25,relwidth=0.25, relheight=0.25)
 
-    delete_item_button=tkinter.Button(inventarioW, text='Consumir Inventario', font='Helvetica 10',command = lambda:stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button))
+    delete_item_button=tkinter.Button(inventarioW, text='Consumir Inventario\nPara ODT', font='Helvetica 10',command = lambda:stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button))
     delete_item_button.place(relx=0.5,rely=0.5,relwidth=0.25, relheight=0.25)
 
     edit_item_button=tkinter.Button(inventarioW, text='Editar Artículo', font='Helvetica 10',command = lambda: edit_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW))
