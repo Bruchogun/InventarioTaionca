@@ -33,6 +33,10 @@ def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,
     measure=actual_selection.get()
     today=str(date.today())
 
+    float(add_item_SellPriceODT.get())
+    float(add_item_SellPricePub.get())
+    float(add_item_PriceCost.get())
+    float(add_item_Stock.get())
     #----------------------------------Information Verifier/DataBase_stock Saver-----------------------------------#
     
     dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
@@ -40,7 +44,7 @@ def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,
     lista=dataBase_stock['Codigo']
     if (code==lista).any():
         send_counter=3
-    while sellPriceODT.isdigit() and sellPricePub.isdigit() and priceCost.isdigit() and stock.isdigit() and send_counter<1 and measure !='Ninguna'and sellPriceODT != "" and sellPricePub != "" and priceCost != "" and stock != "" and code != "":
+    while send_counter<1 and measure !='Ninguna'and sellPriceODT != "" and sellPricePub != "" and priceCost != "" and stock != "" and code != "":
         dataBase_stock= open('Base de datos.exe','a',encoding="utf-8")
         dataBase_stock.write(code)
         dataBase_stock.write(',')
@@ -85,11 +89,16 @@ def edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_
     today=str(date.today())
 
     #----------------------------------Information Verifier/DataBase_stock Saver-----------------------------------#
+    float(add_item_SellPriceODT.get())
+    float(add_item_SellPricePub.get())
+    float(add_item_PriceCost.get())
+    float(add_item_Stock.get())
+
     dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
     send_counter=0
     lista=dataBase_stock['Codigo']
     if code in lista.to_list():
-        while sellPriceODT.isdigit() and sellPricePub.isdigit() and priceCost.isdigit() and stock.isdigit() and send_counter<1 and measure !='Ninguna'and sellPriceODT != "" and sellPricePub != "" and priceCost != "" and stock != "" and code != "":
+        while send_counter<1 and measure !='Ninguna'and sellPriceODT != "" and sellPricePub != "" and priceCost != "" and stock != "" and code != "":
             place=0
             for row in range(len(lista)):       
                 if code == lista[row]: 
@@ -274,7 +283,7 @@ def edit_item(add_item_button,delete_item_button,edit_item_button,view_item_butt
 
 def stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry):
     code=str(consume_code_Entry.get())
-    quantity=int(consume_quantity_Entry.get())
+    quantity=float(consume_quantity_Entry.get())
     odt=str(consume_ODT_Entry.get())
     today=str(date.today())
 
@@ -287,11 +296,13 @@ def stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_O
     for row in range(len(lista)):      
         if code == lista[row]: 
             place=row
-    if  place != "NaN" and dataBase_stock['Existencias'][place]>=quantity:
+    if  place != "NaN" and float(dataBase_stock['Existencias'][place])>=quantity:
         permission=permission+1
     
     if permission==2:
-        dataBase_stock['Existencias'][place]=dataBase_stock['Existencias'][place]-quantity
+        actual_stock=float(dataBase_stock['Existencias'][place])
+        cantidad=float(quantity)
+        dataBase_stock['Existencias'][place]=actual_stock-cantidad
         dataBase_stock.to_csv('Base de datos.exe', index=0)
 
         dataBase_movement= open("Operaciones de ODT.exe","a",encoding="UTF-8")
@@ -311,7 +322,7 @@ def stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_O
         consume_quantity_Entry.delete(0,1000)
         consume_ODT_Entry.delete(0,1000)
 
-        cost=(dataBase_stock['Precio de Venta a ODTs'][place])*quantity
+        cost=(float(dataBase_stock['Precio de Venta a ODTs'][place]))*quantity
         menssage_price=f'Se gastaron {cost}$ con esta acción.'
         messagebox.showinfo("Gasto realizado",menssage_price)
     else:

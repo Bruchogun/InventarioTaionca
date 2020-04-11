@@ -12,7 +12,7 @@ height =int(((height-150)/2)-(height/10))
 window.geometry(f'450x150+{width}+{height}')
 def main():
     window.title("Administración Taionca")
-
+    
     add_item_button=tkinter.Button(window, text="Inventario", font="Helvetica 10", command = lambda: inventario())
     add_item_button.place(relx=0.25,rely=0.25,relwidth=0.25, relheight=0.25)
 
