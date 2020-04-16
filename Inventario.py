@@ -694,6 +694,69 @@ def supplier(inventarioW,add_item_button,delete_item_button,edit_item_button,vie
     send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :supplier_validation(supplier_code_Entry,supplier_supplier_Entry,supplier_addres_Entry,supplier_cellphone1_Entry,supplier_cellphone2_Entry,supplier_cellphone3_Entry,supplier_cellphone4_Entry,supplier_cellphone5_Entry,supplier_name1_Entry,supplier_name2_Entry,supplier_name3_Entry,supplier_name4_Entry,supplier_name5_Entry,supplier_email1_Entry,supplier_email2_Entry,supplier_email3_Entry,supplier_email4_Entry,actual_selection))
     send_button.grid(row=13,column=1)
 
+#--------------------------------------Ver Proveedores----------------------------------------#
+def viewSuppliers(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+    cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
+   
+    table=ttk.Treeview(inventarioW,height = 200, columns=18)
+    tableScrollBar=ttk.Scrollbar(inventarioW, orient="vertical",command=table.yview)
+    table.configure(yscroll=table.set)
+    tableScrollBar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
+
+    tableScrollBarX=ttk.Scrollbar(inventarioW, orient="horizontal",command=table.xview)
+    table.configure(xscroll=table.set)
+    tableScrollBarX.pack(side=tkinter.BOTTOM, fill=tkinter.X)
+
+    table['columns']=('Codigo','Proveedor','Direccion','Telefono 1','Telefono 2','Telefono 3','Telefono 4','Telefono 5','Nombre 1','Nombre 2','Nombre 3','Nombre 4','Nombre 5','Correo 1','Correo 2','Correo 3','Correo 4','Fecha de Registro')
+    table.pack()
+    table.heading('#0', text='Código', anchor = 'center' )
+    table.column('#0',anchor='center')
+    table.heading('#1', text='Proveedor', anchor = 'center' )
+    table.column('#1',anchor='center')
+    table.heading('#2', text="Direccion", anchor = 'center' )
+    table.column('#2',anchor='center')
+    table.heading('#3', text='Telefono 1', anchor = 'center' )
+    table.column('#3',anchor='center')
+    table.heading('#4', text='Telefono 2', anchor = 'center' )
+    table.column('#4',anchor='center')
+    table.heading('#5', text='Telefono 3', anchor = 'center' )
+    table.column('#5',anchor='center')
+    table.heading('#6', text='Telefono 4', anchor = 'center' )
+    table.column('#6',anchor='center')
+    table.heading('#7', text='Telefono 5', anchor = 'center' )
+    table.column('#7',anchor='center')
+    table.heading('#8', text='Nombre 1', anchor = 'center' )
+    table.column('#8',anchor='center')
+    table.heading('#9', text='Nombre 2', anchor = 'center' )
+    table.column('#9',anchor='center')
+    table.heading('#10', text='Nombre 3', anchor = 'center' )
+    table.column('#10',anchor='center')
+    table.heading('#11', text='Nombre 4', anchor = 'center' )
+    table.column('#11',anchor='center')
+    table.heading('#12', text='Nombre 5', anchor = 'center' )
+    table.column('#12',anchor='center')
+    table.heading('#13', text='Correo 1', anchor = 'center' )
+    table.column('#13',anchor='center')
+    table.heading('#14', text='Correo 2', anchor = 'center' )
+    table.column('#14',anchor='center')
+    table.heading('#15', text='Correo 3', anchor = 'center' )
+    table.column('#15',anchor='center')
+    table.heading('#16', text='Correo 4', anchor = 'center' )
+    table.column('#16',anchor='center')
+    table.heading('#17', text='Fecha de Registro', anchor = 'center' )
+    table.column('#17',anchor='center')
+
+    dataBase_stock=pd.read_csv('Proveedores.exe',header=0)
+    lista=[]
+    parameter=len(dataBase_stock['Codigo'])
+    for row in range(parameter):
+        for column in dataBase_stock:
+            lista.append(dataBase_stock[column][row])
+        code=lista[0]
+        del lista[0]
+        table.insert('','end', text=code, values=(lista))
+        lista.clear()
+
 #------------------------------------Función Inventario--------------------------------------#
 def inventario():
     inventarioW = tkinter.Tk()
@@ -718,7 +781,7 @@ def inventario():
     view_item_button6=tkinter.Button(inventarioW, text='Consumir Inventario\nPara el Público', font='Helvetica 10',bg="PaleVioletRed", command = lambda: stock_consume_pub(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
     view_item_button6.place(relx=0.5,rely=0.75,relwidth=0.25, relheight=0.25)
 
-    view_item_button7=tkinter.Button(inventarioW, text='Ver Proveedores', font='Helvetica 10',bg="PaleVioletRed", command = lambda: actionsView(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
+    view_item_button7=tkinter.Button(inventarioW, text='Ver Proveedores', font='Helvetica 10',bg="PaleVioletRed", command = lambda: viewSuppliers(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
     view_item_button7.place(relx=0.25,rely=0,relwidth=0.25, relheight=0.25)
 
     view_item_button8=tkinter.Button(inventarioW, text='Añadir/Editar\nProveedores', font='Helvetica 10',bg='light cyan', command = lambda: supplier(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
