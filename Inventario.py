@@ -398,7 +398,7 @@ def stock_consume_validation_pub(consume_code_Entry,consume_quantity_Entry,consu
     lista=dataBase_stock['Codigo']
     if code in lista.to_list() and odt != "":
         permission=permission+1
-    for row in range(len(lista)):      
+    for row in range(len(lista)):
         if code == lista[row]: 
             place=row
     if  place != "NaN" and float(dataBase_stock['Existencias'][place])>=quantity:
@@ -487,133 +487,212 @@ def stock_consume_pub(inventarioW,add_item_button,delete_item_button,edit_item_b
     send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :stock_consume_validation_pub(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry))
     send_button.grid(row=3,column=1)
 
-def supplier_validation(consume_code_Entry,consume_supplier_Entry,consume_addres_Entry,consume_cellphone1_Entry,consume_cellphone2_Entry,consume_cellphone3_Entry,consume_cellphone4_Entry,consume_cellphone5_Entry,consume_name1_Entry,consume_name2_Entry,consume_name3_Entry,consume_name4_Entry,consume_name5_Entry):
-    pass
-    code=str(consume_code_Entry.get())
-    quantity=float(consume_quantity_Entry.get())
-    odt=str(consume_ODT_Entry.get())
+def supplier_validation(supplier_code_Entry,supplier_supplier_Entry,supplier_addres_Entry,supplier_cellphone1_Entry,supplier_cellphone2_Entry,supplier_cellphone3_Entry,supplier_cellphone4_Entry,supplier_cellphone5_Entry,supplier_name1_Entry,supplier_name2_Entry,supplier_name3_Entry,supplier_name4_Entry,supplier_name5_Entry,supplier_email1_Entry,supplier_email2_Entry,supplier_email3_Entry,supplier_email4_Entry,actual_selection):
+    code=str(supplier_code_Entry.get())
+    supplier=str(supplier_supplier_Entry.get())
+    address=str(supplier_addres_Entry.get())
+    cellphone1=str(supplier_cellphone1_Entry.get())
+    cellphone2=str(supplier_cellphone2_Entry.get())
+    cellphone3=str(supplier_cellphone3_Entry.get())
+    cellphone4=str(supplier_cellphone4_Entry.get())
+    cellphone5=str(supplier_cellphone5_Entry.get())
+    name1=str(supplier_name1_Entry.get())
+    name2=str(supplier_name2_Entry.get())
+    name3=str(supplier_name3_Entry.get())
+    name4=str(supplier_name4_Entry.get())
+    name5=str(supplier_name5_Entry.get())
+    email1=str(supplier_email1_Entry.get())
+    email2=str(supplier_email2_Entry.get())
+    email3=str(supplier_email3_Entry.get())
+    email4=str(supplier_email4_Entry.get())
     today=str(date.today())
+    
+    option=actual_selection.get()
 
-    dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
+    dataBase_stock=pd.read_csv('Proveedores.exe',header=0)
     permission=0
     place="NaN"
     lista=dataBase_stock['Codigo']
-    if code in lista.to_list() and odt != "":
-        permission=permission+1
-    for row in range(len(lista)):      
-        if code == lista[row]: 
-            place=row
-    if  place != "NaN" and float(dataBase_stock['Existencias'][place])>=quantity:
+    if option=="Editar":
+        if code in lista.to_list():
+            for row in range(len(lista)):      
+                if code == lista[row]: 
+                    place=row
+                    if place != "NaN" and supplier==str(dataBase_stock['Proveedor'][place]):
+                        dataBase_movement=pd.read_csv('Proveedores.exe',header=0)
+                        dataBase_movement["Direccion"][place]=address
+                        dataBase_movement["Telefono 1"][place]=cellphone1
+                        dataBase_movement["Telefono 2"][place]=cellphone2
+                        dataBase_movement["Telefono 3"][place]=cellphone3
+                        dataBase_movement["Telefono 4"][place]=cellphone4
+                        dataBase_movement["Telefono 5"][place]=cellphone5
+                        dataBase_movement["Nombre 1"][place]=name1
+                        dataBase_movement["Nombre 2"][place]=name2
+                        dataBase_movement["Nombre 3"][place]=name3
+                        dataBase_movement["Nombre 4"][place]=name4
+                        dataBase_movement["Nombre 5"][place]=name5
+                        dataBase_movement["Correo 1"][place]=email1
+                        dataBase_movement["Correo 2"][place]=email2
+                        dataBase_movement["Correo 3"][place]=email3
+                        dataBase_movement["Correo 4"][place]=email4
+                        dataBase_movement["Fecha de Registro"][place]=today
+                        dataBase_movement.to_csv('Proveedores.exe', index=0)
+                        actual_selection.set("Ninguna")
+                        messagebox.showinfo("¡Atención!","La información fué ingresada correctamente.")
+                        permission=2
+    elif option=="Añadir":
         permission=permission+1
     
-    if permission==2:
-        costo=(float(dataBase_stock['Precio de Venta al Publico'][place]))*quantity
-        cost=str(costo)
-        ganacia=(costo-(float(dataBase_stock['Precio de Costo'][place])))
-        revenue=str(ganacia)
-        measure=dataBase_stock['Unidad de Medida'][place]
-        actual_stock=float(dataBase_stock['Existencias'][place])
-        cantidad=float(quantity)
-        dataBase_stock['Existencias'][place]=actual_stock-cantidad
-        dataBase_stock.to_csv('Base de datos.exe', index=0)
+    if permission==1:
 
-        dataBase_movement= open("Operaciones de ODT.exe","a",encoding="UTF-8")
+        dataBase_movement= open("Proveedores.exe","a",encoding="UTF-8")
         dataBase_movement.write(code)
         dataBase_movement.write(",")
-        dataBase_movement.write(odt)
+        dataBase_movement.write(supplier)
         dataBase_movement.write(",")
-        dataBase_movement.write(consume_quantity_Entry.get())
+        dataBase_movement.write(address)
         dataBase_movement.write(",")
-        dataBase_movement.write(measure)
+        dataBase_movement.write(cellphone1)
         dataBase_movement.write(",")
-        dataBase_movement.write("Consumo")
+        dataBase_movement.write(cellphone2)
         dataBase_movement.write(",")
-        dataBase_movement.write(cost)
+        dataBase_movement.write(cellphone3)
         dataBase_movement.write(",")
-        dataBase_movement.write(revenue)
+        dataBase_movement.write(cellphone4)
+        dataBase_movement.write(",")
+        dataBase_movement.write(cellphone5)
+        dataBase_movement.write(",")
+        dataBase_movement.write(name1)
+        dataBase_movement.write(",")
+        dataBase_movement.write(name2)
+        dataBase_movement.write(",")
+        dataBase_movement.write(name3)
+        dataBase_movement.write(",")
+        dataBase_movement.write(name4)
+        dataBase_movement.write(",")
+        dataBase_movement.write(name5)
+        dataBase_movement.write(",")
+        dataBase_movement.write(email1)
+        dataBase_movement.write(",")
+        dataBase_movement.write(email2)
+        dataBase_movement.write(",")
+        dataBase_movement.write(email3)
+        dataBase_movement.write(",")
+        dataBase_movement.write(email4)
         dataBase_movement.write(",")
         dataBase_movement.write(today)
         dataBase_movement.write("\n")
         dataBase_movement.close()
         
-        consume_code_Entry.delete(0,1000)
-        consume_quantity_Entry.delete(0,1000)
-        consume_ODT_Entry.delete(0,1000)
-
-        menssage_price=f'Se gastaron {cost}$ con esta acción.\nLa ganacia es de {revenue}$.'
-        messagebox.showinfo("Gasto realizado",menssage_price)
+        actual_selection.set("Ninguna")
+        messagebox.showinfo("¡Atención!","La información fué ingresada correctamente.")
+    if permission==0:
+        messagebox.showwarning('Error', 'Favor revisar: \n  1)El código ingresado no existe (En caso de estar editando).\n  2)El proveedor ingresado no existe (En caso de estar editando).')
     else:
-        messagebox.showwarning('Error', 'Favor revisar: \n  1)El código ingresado no existe. \n  2)La cantidad ingresada es mayor a la existente. \n  3)Hay un espacio en blanco.')
-
+        supplier_code_Entry.delete(0,1000)
+        supplier_supplier_Entry.delete(0,1000)
+        supplier_addres_Entry.delete(0,1000)
+        supplier_cellphone1_Entry.delete(0,1000)
+        supplier_cellphone2_Entry.delete(0,1000)
+        supplier_cellphone3_Entry.delete(0,1000)
+        supplier_cellphone4_Entry.delete(0,1000)
+        supplier_cellphone5_Entry.delete(0,1000)
+        supplier_name1_Entry.delete(0,1000)
+        supplier_name2_Entry.delete(0,1000)
+        supplier_name3_Entry.delete(0,1000)
+        supplier_name4_Entry.delete(0,1000)
+        supplier_name5_Entry.delete(0,1000)
+        supplier_email1_Entry.delete(0,1000)
+        supplier_email2_Entry.delete(0,1000)
+        supplier_email3_Entry.delete(0,1000)
+        supplier_email4_Entry.delete(0,1000)
+        actual_selection.set("Ninguna")
+    permission=0
 
 #-------------------------------------Proveedores--------------------------------------------#
 def supplier(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
     cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
-    inventarioW.geometry(f'570x300+{width}+{height}')
+    inventarioW.geometry(f'570x400+{width}+{height}')
 
-    consume_code=tkinter.Label(inventarioW,text='Código')
-    consume_code.grid(row=0,column=0)
-    consume_supplier=tkinter.Label(inventarioW,text='Proveedor')
-    consume_supplier.grid(row=1,column=0)
-    consume_addres=tkinter.Label(inventarioW,text="Dirección")
-    consume_addres.grid(row=2,column=0)
-    consume_cellphone1=tkinter.Label(inventarioW,text="   Número telefónico 1")
-    consume_cellphone1.grid(row=3,column=0)
-    consume_cellphone2=tkinter.Label(inventarioW,text="   Número telefónico 2")
-    consume_cellphone2.grid(row=4,column=0)
-    consume_cellphone3=tkinter.Label(inventarioW,text="   Número telefónico 3")
-    consume_cellphone3.grid(row=5,column=0)
-    consume_cellphone4=tkinter.Label(inventarioW,text="   Número telefónico 4")
-    consume_cellphone4.grid(row=6,column=0)
-    consume_cellphone5=tkinter.Label(inventarioW,text="   Número telefónico 5")
-    consume_cellphone5.grid(row=7,column=0)
-    consume_name1=tkinter.Label(inventarioW,text="   Nombre")
-    consume_name1.grid(row=3,column=2)
-    consume_name2=tkinter.Label(inventarioW,text="   Nombre")
-    consume_name2.grid(row=4,column=2)
-    consume_name3=tkinter.Label(inventarioW,text="   Nombre")
-    consume_name3.grid(row=5,column=2)
-    consume_name4=tkinter.Label(inventarioW,text="   Nombre")
-    consume_name4.grid(row=6,column=2)
-    consume_name5=tkinter.Label(inventarioW,text="   Nombre")
-    consume_name5.grid(row=7,column=2)
+    supplier_code=tkinter.Label(inventarioW,text='Código')
+    supplier_code.grid(row=0,column=0)
+    supplier_supplier=tkinter.Label(inventarioW,text='Proveedor')
+    supplier_supplier.grid(row=1,column=0)
+    supplier_addres=tkinter.Label(inventarioW,text="Dirección")
+    supplier_addres.grid(row=2,column=0)
+    supplier_cellphone1=tkinter.Label(inventarioW,text="   Número telefónico 1")
+    supplier_cellphone1.grid(row=3,column=0)
+    supplier_cellphone2=tkinter.Label(inventarioW,text="   Número telefónico 2")
+    supplier_cellphone2.grid(row=4,column=0)
+    supplier_cellphone3=tkinter.Label(inventarioW,text="   Número telefónico 3")
+    supplier_cellphone3.grid(row=5,column=0)
+    supplier_cellphone4=tkinter.Label(inventarioW,text="   Número telefónico 4")
+    supplier_cellphone4.grid(row=6,column=0)
+    supplier_cellphone5=tkinter.Label(inventarioW,text="   Número telefónico 5")
+    supplier_cellphone5.grid(row=7,column=0)
+    supplier_email1=tkinter.Label(inventarioW,text="   Correo 1")
+    supplier_email1.grid(row=8,column=0)
+    supplier_email2=tkinter.Label(inventarioW,text="   Correo 2")
+    supplier_email2.grid(row=9,column=0)
+    supplier_email3=tkinter.Label(inventarioW,text="   Correo 3")
+    supplier_email3.grid(row=10,column=0)
+    supplier_email4=tkinter.Label(inventarioW,text="   Correo 4")
+    supplier_email4.grid(row=11,column=0)
+    supplier_name1=tkinter.Label(inventarioW,text="   Nombre")
+    supplier_name1.grid(row=3,column=2)
+    supplier_name2=tkinter.Label(inventarioW,text="   Nombre")
+    supplier_name2.grid(row=4,column=2)
+    supplier_name3=tkinter.Label(inventarioW,text="   Nombre")
+    supplier_name3.grid(row=5,column=2)
+    supplier_name4=tkinter.Label(inventarioW,text="   Nombre")
+    supplier_name4.grid(row=6,column=2)
+    supplier_name5=tkinter.Label(inventarioW,text="   Nombre")
+    supplier_name5.grid(row=7,column=2)
 
-    consume_code_Entry=tkinter.Entry(inventarioW)
-    consume_code_Entry.grid(row=0,column=1)
-    consume_supplier_Entry=tkinter.Entry(inventarioW)
-    consume_supplier_Entry.grid(row=1,column=1)
-    consume_addres_Entry=tkinter.Entry(inventarioW)
-    consume_addres_Entry.grid(row=2,column=1)
-    consume_cellphone1_Entry=tkinter.Entry(inventarioW)
-    consume_cellphone1_Entry.grid(row=3,column=1)
-    consume_cellphone2_Entry=tkinter.Entry(inventarioW)
-    consume_cellphone2_Entry.grid(row=4,column=1)
-    consume_cellphone3_Entry=tkinter.Entry(inventarioW)
-    consume_cellphone3_Entry.grid(row=5,column=1)
-    consume_cellphone4_Entry=tkinter.Entry(inventarioW)
-    consume_cellphone4_Entry.grid(row=6,column=1)
-    consume_cellphone5_Entry=tkinter.Entry(inventarioW)
-    consume_cellphone5_Entry.grid(row=7,column=1)
-    consume_name1_Entry=tkinter.Entry(inventarioW)
-    consume_name1_Entry.grid(row=3,column=3)
-    consume_name2_Entry=tkinter.Entry(inventarioW)
-    consume_name2_Entry.grid(row=4,column=3)
-    consume_name3_Entry=tkinter.Entry(inventarioW)
-    consume_name3_Entry.grid(row=5,column=3)
-    consume_name4_Entry=tkinter.Entry(inventarioW)
-    consume_name4_Entry.grid(row=6,column=3)
-    consume_name5_Entry=tkinter.Entry(inventarioW)
-    consume_name5_Entry.grid(row=7,column=3)
-
+    supplier_code_Entry=tkinter.Entry(inventarioW)
+    supplier_code_Entry.grid(row=0,column=1)
+    supplier_supplier_Entry=tkinter.Entry(inventarioW)
+    supplier_supplier_Entry.grid(row=1,column=1)
+    supplier_addres_Entry=tkinter.Entry(inventarioW)
+    supplier_addres_Entry.grid(row=2,column=1)
+    supplier_cellphone1_Entry=tkinter.Entry(inventarioW)
+    supplier_cellphone1_Entry.grid(row=3,column=1)
+    supplier_cellphone2_Entry=tkinter.Entry(inventarioW)
+    supplier_cellphone2_Entry.grid(row=4,column=1)
+    supplier_cellphone3_Entry=tkinter.Entry(inventarioW)
+    supplier_cellphone3_Entry.grid(row=5,column=1)
+    supplier_cellphone4_Entry=tkinter.Entry(inventarioW)
+    supplier_cellphone4_Entry.grid(row=6,column=1)
+    supplier_cellphone5_Entry=tkinter.Entry(inventarioW)
+    supplier_cellphone5_Entry.grid(row=7,column=1)
+    supplier_email1_Entry=tkinter.Entry(inventarioW)
+    supplier_email1_Entry.grid(row=8,column=1)
+    supplier_email2_Entry=tkinter.Entry(inventarioW)
+    supplier_email2_Entry.grid(row=9,column=1)
+    supplier_email3_Entry=tkinter.Entry(inventarioW)
+    supplier_email3_Entry.grid(row=10,column=1)
+    supplier_email4_Entry=tkinter.Entry(inventarioW)
+    supplier_email4_Entry.grid(row=11,column=1)
+    supplier_name1_Entry=tkinter.Entry(inventarioW)
+    supplier_name1_Entry.grid(row=3,column=3)
+    supplier_name2_Entry=tkinter.Entry(inventarioW)
+    supplier_name2_Entry.grid(row=4,column=3)
+    supplier_name3_Entry=tkinter.Entry(inventarioW)
+    supplier_name3_Entry.grid(row=5,column=3)
+    supplier_name4_Entry=tkinter.Entry(inventarioW)
+    supplier_name4_Entry.grid(row=6,column=3)
+    supplier_name5_Entry=tkinter.Entry(inventarioW)
+    supplier_name5_Entry.grid(row=7,column=3)
+    
     actual_selection=tkinter.StringVar(inventarioW)
     actual_selection.set('Ninguna')
     selection=tkinter.StringVar(inventarioW)
     option=['Añadir','Editar']
     selection=tkinter.OptionMenu(inventarioW,actual_selection,*option)
-    selection.grid(row=8,column=1)
+    selection.grid(row=12,column=1)
 
-    send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :supplier_validation(consume_code_Entry,consume_supplier_Entry,consume_addres_Entry,consume_cellphone1_Entry,consume_cellphone2_Entry,consume_cellphone3_Entry,consume_cellphone4_Entry,consume_cellphone5_Entry,consume_name1_Entry,consume_name2_Entry,consume_name3_Entry,consume_name4_Entry,consume_name5_Entry))
-    send_button.grid(row=9,column=1)
+    send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :supplier_validation(supplier_code_Entry,supplier_supplier_Entry,supplier_addres_Entry,supplier_cellphone1_Entry,supplier_cellphone2_Entry,supplier_cellphone3_Entry,supplier_cellphone4_Entry,supplier_cellphone5_Entry,supplier_name1_Entry,supplier_name2_Entry,supplier_name3_Entry,supplier_name4_Entry,supplier_name5_Entry,supplier_email1_Entry,supplier_email2_Entry,supplier_email3_Entry,supplier_email4_Entry,actual_selection))
+    send_button.grid(row=13,column=1)
 
 #------------------------------------Función Inventario--------------------------------------#
 def inventario():
