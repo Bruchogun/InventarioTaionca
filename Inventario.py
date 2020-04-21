@@ -23,13 +23,14 @@ def codevalidation(code):
         answer=-1
     return(answer)
 #----------------------------------Añadir Artículo-----------------------------------#
-def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,add_item_SellPricePub,add_item_PriceCost,add_item_Stock,actual_selection,inventarioW,labelError):
+def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,add_item_SellPricePub,add_item_PriceCost,add_item_Stock,actual_selection,inventarioW,labelError,add_item_labelVDate_Entry,manager):
     code=str(add_item_code.get())
     description=add_item_description.get()
     sellPriceODT=add_item_SellPriceODT.get()
     sellPricePub=add_item_SellPricePub.get()
     priceCost=add_item_PriceCost.get()
     stock=add_item_Stock.get()
+    add_item_VDate=add_item_labelVDate_Entry.get()
     measure=actual_selection.get()
     today=str(date.today())
 
@@ -60,7 +61,11 @@ def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,
         dataBase_stock.write(',')
         dataBase_stock.write(measure)
         dataBase_stock.write(',')
+        dataBase_stock.write(add_item_VDate)
+        dataBase_stock.write(',')
         dataBase_stock.write(today)
+        dataBase_stock.write(',')
+        dataBase_stock.write(manager)
         dataBase_stock.write('\n')
         add_item_code.delete(0,1000)
         add_item_description.delete(0,1000)
@@ -68,6 +73,7 @@ def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,
         add_item_SellPricePub.delete(0,1000)
         add_item_PriceCost.delete(0,1000)
         add_item_Stock.delete(0,1000)
+        add_item_labelVDate_Entry.delete(0,1000)
         actual_selection.set('Ninguna')
         send_counter=1
         dataBase_stock.close()
@@ -78,13 +84,14 @@ def write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,
     else:
         labelError.grid_forget()
 
-def edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_SellPricePub,add_item_PriceCost,add_item_Stock,actual_selection,inventarioW,labelError):
+def edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_SellPricePub,add_item_PriceCost,add_item_Stock,actual_selection,inventarioW,labelError,add_item_labelVDate_Entry,manager):
     code=str(add_item_code.get())
     description=add_item_description.get()
     sellPriceODT=add_item_SellPriceODT.get()
     sellPricePub=add_item_SellPricePub.get()
     priceCost=add_item_PriceCost.get()
     stock=add_item_Stock.get()
+    add_item_labelVDate=add_item_labelVDate_Entry.get()
     measure=actual_selection.get()
     today=str(date.today())
 
@@ -109,7 +116,9 @@ def edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_
             dataBase_stock['Precio de Costo'][place]=priceCost
             dataBase_stock['Existencias'][place]=stock
             dataBase_stock['Unidad de Medida'][place]=measure
+            dataBase_stock['Fecha de Vencimiento'][place]=add_item_labelVDate
             dataBase_stock['Ultima Fecha de Modificacion'][place]=today
+            dataBase_stock['Responsable'][place]=manager
             dataBase_stock.to_csv('Base de datos.exe', index=0)
 
             add_item_code.delete(0,1000)
@@ -118,6 +127,7 @@ def edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_
             add_item_SellPricePub.delete(0,1000)
             add_item_PriceCost.delete(0,1000)
             add_item_Stock.delete(0,1000)
+            add_item_labelVDate_Entry.delete(0,1000)
             actual_selection.set('Ninguna')
             send_counter=1
     else:
@@ -131,11 +141,70 @@ def send_button(password,add_item_button,delete_item_button,edit_item_button,vie
     dataBase_stock=pd.read_excel('Registro de Contraseñas.xlsx','A')
     dataBase_stockPassword1=str(dataBase_stock['Contraseña'][0])
     dataBase_stockPassword2=str(dataBase_stock['Contraseña'][1])
-    if password.get()==dataBase_stockPassword1 or password.get()==dataBase_stockPassword2:
-        add_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
+    if password.get()==dataBase_stockPassword1:
+        manager="Diego"
+        add_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager)
         passwordW.destroy()
+
+    elif password.get()==dataBase_stockPassword2:
+        manager="Nuncio"
+        add_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager)
+        passwordW.destroy()      
+
     else:
         messagebox.showwarning('Error', 'Contraseña incorrecta')
+
+def send_button_EDIT(password,add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,passwordW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+    dataBase_stock=pd.read_excel('Registro de Contraseñas.xlsx','A')
+    dataBase_stockPassword1=str(dataBase_stock['Contraseña'][0])
+    dataBase_stockPassword2=str(dataBase_stock['Contraseña'][1])
+    if password.get()==dataBase_stockPassword1:
+        manager="Diego"
+        edit_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager)
+        passwordW.destroy()
+
+    elif password.get()==dataBase_stockPassword2:
+        manager="Nuncio"
+        edit_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager)
+        passwordW.destroy()      
+
+    else:
+        messagebox.showwarning('Error', 'Contraseña incorrecta')
+
+def send_button_PROVEODT(password,add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,passwordW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+    dataBase_stock=pd.read_excel('Registro de Contraseñas.xlsx','A')
+    dataBase_stockPassword1=str(dataBase_stock['Contraseña'][0])
+    dataBase_stockPassword2=str(dataBase_stock['Contraseña'][1])
+    if password.get()==dataBase_stockPassword1:
+        manager="Diego"
+        stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager)
+        passwordW.destroy()
+
+    elif password.get()==dataBase_stockPassword2:
+        manager="Nuncio"
+        stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager)
+        passwordW.destroy()      
+
+    else:
+        messagebox.showwarning('Error', 'Contraseña incorrecta')
+
+def send_button_PROVEPUB(password,add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,passwordW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+    dataBase_stock=pd.read_excel('Registro de Contraseñas.xlsx','A')
+    dataBase_stockPassword1=str(dataBase_stock['Contraseña'][0])
+    dataBase_stockPassword2=str(dataBase_stock['Contraseña'][1])
+    if password.get()==dataBase_stockPassword1:
+        manager="Diego"
+        stock_consume_pub(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager)
+        passwordW.destroy()
+
+    elif password.get()==dataBase_stockPassword2:
+        manager="Nuncio"
+        stock_consume_pub(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager)
+        passwordW.destroy()      
+
+    else:
+        messagebox.showwarning('Error', 'Contraseña incorrecta')
+
 
 def verification(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
     ancho=width+50
@@ -149,9 +218,49 @@ def verification(add_item_button,delete_item_button,edit_item_button,view_item_b
     passwordBox.grid(row=0,column=1)
     passwordButton=tkinter.Button(passwordW,text='↑ Enviar ↑',command= lambda: send_button(passwordBox,add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,passwordW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
     passwordButton.grid(row=1,column=1)
+
+def verification_EDIT(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+    ancho=width+50
+    alto=height+100
+    passwordW = tkinter.Tk()
+    passwordW.title('Contraseña')
+    passwordW.geometry(f'400x80+{ancho}+{alto}')
+    passwordLabel=tkinter.Label(passwordW, text='  Ingrese su contraseña: ')
+    passwordLabel.grid(row=0,column=0)
+    passwordBox=tkinter.Entry(passwordW)
+    passwordBox.grid(row=0,column=1)
+    passwordButton=tkinter.Button(passwordW,text='↑ Enviar ↑',command= lambda: send_button_EDIT(passwordBox,add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,passwordW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
+    passwordButton.grid(row=1,column=1)
+
+def verification_PROVEPUB(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+    ancho=width+50
+    alto=height+100
+    passwordW = tkinter.Tk()
+    passwordW.title('Contraseña')
+    passwordW.geometry(f'400x80+{ancho}+{alto}')
+    passwordLabel=tkinter.Label(passwordW, text='  Ingrese su contraseña: ')
+    passwordLabel.grid(row=0,column=0)
+    passwordBox=tkinter.Entry(passwordW)
+    passwordBox.grid(row=0,column=1)
+    passwordButton=tkinter.Button(passwordW,text='↑ Enviar ↑',command= lambda: send_button_PROVEPUB(passwordBox,add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,passwordW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
+    passwordButton.grid(row=1,column=1)
+
+
+def verification_PROVEODT(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+    ancho=width+50
+    alto=height+100
+    passwordW = tkinter.Tk()
+    passwordW.title('Contraseña')
+    passwordW.geometry(f'400x80+{ancho}+{alto}')
+    passwordLabel=tkinter.Label(passwordW, text='  Ingrese su contraseña: ')
+    passwordLabel.grid(row=0,column=0)
+    passwordBox=tkinter.Entry(passwordW)
+    passwordBox.grid(row=0,column=1)
+    passwordButton=tkinter.Button(passwordW,text='↑ Enviar ↑',command= lambda: send_button_PROVEODT(passwordBox,add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,passwordW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
+    passwordButton.grid(row=1,column=1)
     
     
-def add_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+def add_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager):
     cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
     #---------------------LABEL------------------------------------------------#
     add_item_labelCode=tkinter.Label(inventarioW,text='Código')
@@ -166,6 +275,10 @@ def add_item(add_item_button,delete_item_button,edit_item_button,view_item_butto
     add_item_labelPriceCost.grid(row=4,column=0)
     add_item_labelStock=tkinter.Label(inventarioW,text='Existencias Disponibles')
     add_item_labelStock.grid(row=5,column=0)
+    add_item_labelVDate=tkinter.Label(inventarioW,text='Fecha de Vencimiento')
+    add_item_labelVDate.grid(row=6,column=0)
+    add_item_labelEJE=tkinter.Label(inventarioW,text='Ejemplo 2020-04-20', fg="gray")
+    add_item_labelEJE.grid(row=6,column=2)
     #-------------------------BoxEntry-----------------------------------------#
     add_item_code=tkinter.Entry(inventarioW)
     add_item_code.grid(row=0,column=1)
@@ -179,6 +292,8 @@ def add_item(add_item_button,delete_item_button,edit_item_button,view_item_butto
     add_item_PriceCost.grid(row=4,column=1)
     add_item_Stock=tkinter.Entry(inventarioW)
     add_item_Stock.grid(row=5,column=1)    
+    add_item_labelVDate_Entry=tkinter.Entry(inventarioW)
+    add_item_labelVDate_Entry.grid(row=6,column=1)    
 
     #---------------------------DeployBar--------------------------------------#
     actual_selection=tkinter.StringVar(inventarioW)
@@ -186,12 +301,12 @@ def add_item(add_item_button,delete_item_button,edit_item_button,view_item_butto
     selection=tkinter.StringVar(inventarioW)
     measure_selection=['Unidad (Und)','Kilogramo (Kg)','Metro Cúbico (m^3)','Metro (m)']
     selection=tkinter.OptionMenu(inventarioW,actual_selection,*measure_selection)
-    selection.grid(row=6,column=1)
+    selection.grid(row=7,column=1)
 
     #-------------------------Buttons------------------------------------------#
     labelError=tkinter.Label(inventarioW,text='Los valores ingresados no son válidos.')
-    send_button4=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,add_item_SellPricePub,add_item_PriceCost,add_item_Stock,actual_selection,inventarioW,labelError))
-    send_button4.grid(row=7,column=1)
+    send_button4=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :write_Data_csvFile(add_item_code,add_item_description,add_item_SellPriceODT,add_item_SellPricePub,add_item_PriceCost,add_item_Stock,actual_selection,inventarioW,labelError,add_item_labelVDate_Entry,manager))
+    send_button4.grid(row=8,column=1)
 
 #------------------------------------Limpiar Pantalla--------------------------------------#
 def cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
@@ -208,12 +323,16 @@ def cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_butto
 def sotckView(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
     cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
    
-    table=ttk.Treeview(inventarioW,height = 200, columns=6)
+    table=ttk.Treeview(inventarioW,height = 200, columns=9)
     tableScrollBar=ttk.Scrollbar(inventarioW, orient="vertical",command=table.yview)
     table.configure(yscroll=table.set)
     tableScrollBar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
 
-    table['columns']=('Descripcion','Precio de Venta a ODTs','Precio de Venta al Publico','Precio de Costo','Existencias','Unidad de medida','Ultima Modificacion')
+    tableScrollBarX=ttk.Scrollbar(inventarioW, orient="horizontal",command=table.xview)
+    table.configure(xscroll=table.set)
+    tableScrollBarX.pack(side=tkinter.BOTTOM, fill=tkinter.X)
+
+    table['columns']=('Descripcion','Precio de Venta a ODTs','Precio de Venta al Publico','Precio de Costo','Existencias','Unidad de medida','Fecha de Vencimiento','Ultima Modificacion','Responsable')
     table.pack()
     table.heading('#0', text='Código', anchor = 'center' )
     table.column('#0',anchor='center')
@@ -229,8 +348,12 @@ def sotckView(inventarioW,add_item_button,delete_item_button,edit_item_button,vi
     table.column('#5',anchor='center')
     table.heading('#6', text='Unidad de Medida', anchor = 'center' )
     table.column('#6',anchor='center')
-    table.heading('#7', text='Última Modificación', anchor = 'center' )
+    table.heading('#7', text='Fecha de Vencimiento', anchor = 'center' )
     table.column('#7',anchor='center')
+    table.heading('#8', text='Última Modificación', anchor = 'center' )
+    table.column('#8',anchor='center')
+    table.heading('#9', text='Responsable', anchor = 'center' )
+    table.column('#9',anchor='center')
 
     dataBase_stock=pd.read_csv('Base de datos.exe',header=0)
     lista=[]
@@ -247,12 +370,16 @@ def sotckView(inventarioW,add_item_button,delete_item_button,edit_item_button,vi
 def actionsView(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
     cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
    
-    table=ttk.Treeview(inventarioW,height = 200, columns=7)
+    table=ttk.Treeview(inventarioW,height = 200, columns=9)
     tableScrollBar=ttk.Scrollbar(inventarioW, orient="vertical",command=table.yview)
     table.configure(yscroll=table.set)
     tableScrollBar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
 
-    table['columns']=('Codigo','ODT','Cantidad','Unidad de medida','Acción','Dinero Equivalente','Ganancia Generada','Fecha')
+    tableScrollBarX=ttk.Scrollbar(inventarioW, orient="horizontal",command=table.xview)
+    table.configure(xscroll=table.set)
+    tableScrollBarX.pack(side=tkinter.BOTTOM, fill=tkinter.X)
+
+    table['columns']=('ODT','Cantidad','Unidad de medida','Acción','Dinero Equivalente','Ganancia Generada','Fecha','ODT/Público','Responsable')
     table.pack()
     table.heading('#0', text='Código', anchor = 'center' )
     table.column('#0',anchor='center')
@@ -270,6 +397,10 @@ def actionsView(inventarioW,add_item_button,delete_item_button,edit_item_button,
     table.column('#6',anchor='center')
     table.heading('#7', text='Fecha', anchor = 'center' )
     table.column('#7',anchor='center')
+    table.heading('#8', text='ODT/Público', anchor = 'center' )
+    table.column('#8',anchor='center')
+    table.heading('#9', text='Responsable', anchor = 'center' )
+    table.column('#9',anchor='center')
 
     dataBase_stock=pd.read_csv('Operaciones de ODT.exe',header=0)
     lista=[]
@@ -283,52 +414,58 @@ def actionsView(inventarioW,add_item_button,delete_item_button,edit_item_button,
         lista.clear()
 
 #----------------------------------------Editar Artículo-------------------------------------#
-def edit_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
-        if 1==1:
-            cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
-            #---------------------LABEL------------------------------------------------#
-            add_item_labelCode=tkinter.Label(inventarioW,text='Código')
-            add_item_labelCode.grid(row=0,column=0)
-            add_item_labelDescription=tkinter.Label(inventarioW,text='Descripción del Artículo')
-            add_item_labelDescription.grid(row=1,column=0)
-            add_item_labelSellPriceODT=tkinter.Label(inventarioW,text="Precio de Venta a ODT's en $")
-            add_item_labelSellPriceODT.grid(row=2,column=0)
-            add_item_labelSellPricePub=tkinter.Label(inventarioW,text='Precio de venta al Público en $')
-            add_item_labelSellPricePub.grid(row=3,column=0)
-            add_item_labelPriceCost=tkinter.Label(inventarioW,text='Precio de Costo en $')
-            add_item_labelPriceCost.grid(row=4,column=0)
-            add_item_labelStock=tkinter.Label(inventarioW,text='Existencias Disponibles')
-            add_item_labelStock.grid(row=5,column=0)
-            #-------------------------BoxEntry-----------------------------------------#
-            add_item_code=tkinter.Entry(inventarioW)
-            add_item_code.grid(row=0,column=1)
-            add_item_description=tkinter.Entry(inventarioW)
-            add_item_description.grid(row=1,column=1)
-            add_item_SellPriceODT=tkinter.Entry(inventarioW)
-            add_item_SellPriceODT.grid(row=2,column=1)
-            add_item_SellPricePub=tkinter.Entry(inventarioW)
-            add_item_SellPricePub.grid(row=3,column=1)
-            add_item_PriceCost=tkinter.Entry(inventarioW)
-            add_item_PriceCost.grid(row=4,column=1)
-            add_item_Stock=tkinter.Entry(inventarioW)
-            add_item_Stock.grid(row=5,column=1)    
+def edit_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager):
+    if 1==1:
+        cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
+        #---------------------LABEL------------------------------------------------#
+        add_item_labelCode=tkinter.Label(inventarioW,text='Código')
+        add_item_labelCode.grid(row=0,column=0)
+        add_item_labelDescription=tkinter.Label(inventarioW,text='Descripción del Artículo')
+        add_item_labelDescription.grid(row=1,column=0)
+        add_item_labelSellPriceODT=tkinter.Label(inventarioW,text="Precio de Venta a ODT's en $")
+        add_item_labelSellPriceODT.grid(row=2,column=0)
+        add_item_labelSellPricePub=tkinter.Label(inventarioW,text='Precio de venta al Público en $')
+        add_item_labelSellPricePub.grid(row=3,column=0)
+        add_item_labelPriceCost=tkinter.Label(inventarioW,text='Precio de Costo en $')
+        add_item_labelPriceCost.grid(row=4,column=0)
+        add_item_labelStock=tkinter.Label(inventarioW,text='Existencias Disponibles')
+        add_item_labelStock.grid(row=5,column=0)
+        add_item_labelVDate=tkinter.Label(inventarioW,text='Fecha de Vencimiento')
+        add_item_labelVDate.grid(row=6,column=0)
+        add_item_labelEJE=tkinter.Label(inventarioW,text='Ejemplo 2020-04-20', fg="gray")
+        add_item_labelEJE.grid(row=6,column=2)
+        #-------------------------BoxEntry-----------------------------------------#
+        add_item_code=tkinter.Entry(inventarioW)
+        add_item_code.grid(row=0,column=1)
+        add_item_description=tkinter.Entry(inventarioW)
+        add_item_description.grid(row=1,column=1)
+        add_item_SellPriceODT=tkinter.Entry(inventarioW)
+        add_item_SellPriceODT.grid(row=2,column=1)
+        add_item_SellPricePub=tkinter.Entry(inventarioW)
+        add_item_SellPricePub.grid(row=3,column=1)
+        add_item_PriceCost=tkinter.Entry(inventarioW)
+        add_item_PriceCost.grid(row=4,column=1)
+        add_item_Stock=tkinter.Entry(inventarioW)
+        add_item_Stock.grid(row=5,column=1)    
+        add_item_labelVDate_Entry=tkinter.Entry(inventarioW)
+        add_item_labelVDate_Entry.grid(row=6,column=1)
 
-            #---------------------------DeployBar--------------------------------------#
-            actual_selection=tkinter.StringVar(inventarioW)
-            actual_selection.set('Ninguna')
-            selection=tkinter.StringVar(inventarioW)
-            measure_selection=['Unidad (Und)','Kilogramo (Kg)','Metro Cúbico (m^3)','Metro (m)']
-            selection=tkinter.OptionMenu(inventarioW,actual_selection,*measure_selection)
-            selection.grid(row=6,column=1)
+        #---------------------------DeployBar--------------------------------------#
+        actual_selection=tkinter.StringVar(inventarioW)
+        actual_selection.set('Ninguna')
+        selection=tkinter.StringVar(inventarioW)
+        measure_selection=['Unidad (Und)','Kilogramo (Kg)','Metro Cúbico (m^3)','Metro (m)']
+        selection=tkinter.OptionMenu(inventarioW,actual_selection,*measure_selection)
+        selection.grid(row=7,column=1)
 
-            #-------------------------Buttons------------------------------------------#
-            labelError=tkinter.Label(inventarioW,text='Los valores ingresados no son válidos.')
-            send_button4=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_SellPricePub,add_item_PriceCost,add_item_Stock,actual_selection,inventarioW,labelError))
-            send_button4.grid(row=7,column=1)
-        else:
-            messagebox.showwarning('Error', 'Usted no tiene acceso a esta opción')
+        #-------------------------Buttons------------------------------------------#
+        labelError=tkinter.Label(inventarioW,text='Los valores ingresados no son válidos.')
+        send_button4=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :edit_data(add_item_code,add_item_description,add_item_SellPriceODT,add_item_SellPricePub,add_item_PriceCost,add_item_Stock,actual_selection,inventarioW,labelError,add_item_labelVDate_Entry,manager))
+        send_button4.grid(row=8,column=1)
+    else:
+        messagebox.showwarning('Error', 'Usted no tiene acceso a esta opción')
 
-def stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry):
+def stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry,manager):
     code=str(consume_code_Entry.get())
     quantity=float(consume_quantity_Entry.get())
     odt=str(consume_ODT_Entry.get())
@@ -373,6 +510,10 @@ def stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_O
         dataBase_movement.write(revenue)
         dataBase_movement.write(",")
         dataBase_movement.write(today)
+        dataBase_movement.write(",")
+        dataBase_movement.write("ODT")
+        dataBase_movement.write(",")
+        dataBase_movement.write(manager)
         dataBase_movement.write("\n")
         dataBase_movement.close()
         
@@ -386,7 +527,7 @@ def stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_O
         messagebox.showwarning('Error', 'Favor revisar: \n  1)El código ingresado no existe. \n  2)La cantidad ingresada es mayor a la existente. \n  3)Hay un espacio en blanco.')
 
 
-def stock_consume_validation_pub(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry):
+def stock_consume_validation_pub(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry,manager):
     code=str(consume_code_Entry.get())
     quantity=float(consume_quantity_Entry.get())
     odt=str(consume_ODT_Entry.get())
@@ -431,6 +572,10 @@ def stock_consume_validation_pub(consume_code_Entry,consume_quantity_Entry,consu
         dataBase_movement.write(revenue)
         dataBase_movement.write(",")
         dataBase_movement.write(today)
+        dataBase_movement.write(",")
+        dataBase_movement.write("Público")
+        dataBase_movement.write(",")
+        dataBase_movement.write(manager)
         dataBase_movement.write("\n")
         dataBase_movement.close()
         
@@ -443,7 +588,7 @@ def stock_consume_validation_pub(consume_code_Entry,consume_quantity_Entry,consu
     else:
         messagebox.showwarning('Error', 'Favor revisar: \n  1)El código ingresado no existe. \n  2)La cantidad ingresada es mayor a la existente. \n  3)Hay un espacio en blanco.')
 #------------------------------------Consumir Inventario-------------------------------------#
-def stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
+def stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager):
     cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
     inventarioW.geometry(f'550x150+{width}+{height}')
 
@@ -461,12 +606,11 @@ def stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_butto
     consume_ODT_Entry=tkinter.Entry(inventarioW)
     consume_ODT_Entry.grid(row=2,column=1)
 
-    send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry))
+    send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :stock_consume_validation(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry,manager))
     send_button.grid(row=3,column=1)
 
 #------------------------Consumir Inventario al público---------------------------------------#
-def stock_consume_pub(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8):
-
+def stock_consume_pub(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager):
     cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
     inventarioW.geometry(f'550x150+{width}+{height}')
 
@@ -484,7 +628,7 @@ def stock_consume_pub(inventarioW,add_item_button,delete_item_button,edit_item_b
     consume_ODT_Entry=tkinter.Entry(inventarioW)
     consume_ODT_Entry.grid(row=2,column=1)
 
-    send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :stock_consume_validation_pub(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry))
+    send_button=tkinter.Button(inventarioW,text='↑ Enviar ↑',command=lambda :stock_consume_validation_pub(consume_code_Entry,consume_quantity_Entry,consume_ODT_Entry,manager))
     send_button.grid(row=3,column=1)
 
 def supplier_validation(supplier_code_Entry,supplier_supplier_Entry,supplier_addres_Entry,supplier_cellphone1_Entry,supplier_cellphone2_Entry,supplier_cellphone3_Entry,supplier_cellphone4_Entry,supplier_cellphone5_Entry,supplier_name1_Entry,supplier_name2_Entry,supplier_name3_Entry,supplier_name4_Entry,supplier_name5_Entry,supplier_email1_Entry,supplier_email2_Entry,supplier_email3_Entry,supplier_email4_Entry,actual_selection):
@@ -707,7 +851,7 @@ def viewSuppliers(inventarioW,add_item_button,delete_item_button,edit_item_butto
     table.configure(xscroll=table.set)
     tableScrollBarX.pack(side=tkinter.BOTTOM, fill=tkinter.X)
 
-    table['columns']=('Codigo','Proveedor','Direccion','Telefono 1','Telefono 2','Telefono 3','Telefono 4','Telefono 5','Nombre 1','Nombre 2','Nombre 3','Nombre 4','Nombre 5','Correo 1','Correo 2','Correo 3','Correo 4','Fecha de Registro')
+    table['columns']=('Proveedor','Direccion','Telefono 1','Telefono 2','Telefono 3','Telefono 4','Telefono 5','Nombre 1','Nombre 2','Nombre 3','Nombre 4','Nombre 5','Correo 1','Correo 2','Correo 3','Correo 4','Fecha de Registro')
     table.pack()
     table.heading('#0', text='Código', anchor = 'center' )
     table.column('#0',anchor='center')
@@ -766,10 +910,10 @@ def inventario():
     add_item_button=tkinter.Button(inventarioW, text='Añadir Artículo', font='Helvetica 10',bg='light cyan', command = lambda: verification(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
     add_item_button.place(relx=0.25,rely=0.25,relwidth=0.25, relheight=0.25)
 
-    delete_item_button=tkinter.Button(inventarioW, text='Consumir Inventario\nPara ODT', font='Helvetica 10',bg='light cyan',command = lambda:stock_consume(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
+    delete_item_button=tkinter.Button(inventarioW, text='Consumir Inventario\nPara ODT', font='Helvetica 10',bg='light cyan',command = lambda:verification_PROVEODT(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
     delete_item_button.place(relx=0.5,rely=0.5,relwidth=0.25, relheight=0.25)
 
-    edit_item_button=tkinter.Button(inventarioW, text='Editar Artículo', font='Helvetica 10',bg="PaleVioletRed",command = lambda: edit_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
+    edit_item_button=tkinter.Button(inventarioW, text='Editar Artículo', font='Helvetica 10',bg="PaleVioletRed",command = lambda: verification_EDIT(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
     edit_item_button.place(relx=0.25,rely=0.5,relwidth=0.25, relheight=0.25)
 
     view_item_button=tkinter.Button(inventarioW, text='Ver Stock', font='Helvetica 10',bg="PaleVioletRed", command = lambda: sotckView(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
@@ -778,7 +922,7 @@ def inventario():
     view_item_button5=tkinter.Button(inventarioW, text='Ver Operaciones', font='Helvetica 10',bg='light cyan', command = lambda: actionsView(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
     view_item_button5.place(relx=0.5,rely=0,relwidth=0.25, relheight=0.25)
 
-    view_item_button6=tkinter.Button(inventarioW, text='Consumir Inventario\nPara el Público', font='Helvetica 10',bg="PaleVioletRed", command = lambda: stock_consume_pub(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
+    view_item_button6=tkinter.Button(inventarioW, text='Consumir Inventario\nPara el Público', font='Helvetica 10',bg="PaleVioletRed", command = lambda: verification_PROVEPUB(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
     view_item_button6.place(relx=0.5,rely=0.75,relwidth=0.25, relheight=0.25)
 
     view_item_button7=tkinter.Button(inventarioW, text='Ver Proveedores', font='Helvetica 10',bg="PaleVioletRed", command = lambda: viewSuppliers(inventarioW,add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8))
