@@ -415,7 +415,9 @@ def actionsView(inventarioW,add_item_button,delete_item_button,edit_item_button,
 
 #----------------------------------------Editar Artículo-------------------------------------#
 def edit_item(add_item_button,delete_item_button,edit_item_button,view_item_button,inventarioW,view_item_button5,view_item_button6,view_item_button7,view_item_button8,manager):
-    if 1==1:
+    dataBase_stock=pd.read_excel('Registro de Contraseñas.xlsx','A')
+    access=str(dataBase_stock['Acceso'][0])
+    if access==1:
         cleanOut(add_item_button,delete_item_button,edit_item_button,view_item_button,view_item_button5,view_item_button6,view_item_button7,view_item_button8)
         #---------------------LABEL------------------------------------------------#
         add_item_labelCode=tkinter.Label(inventarioW,text='Código')
